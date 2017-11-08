@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-use MIME::Base64;
+use MIME::Base64 qw(encode_base64url);
 
 my $h = $ARGV[0];
 
@@ -73,8 +73,7 @@ my $output = "$header$question$resource";
 
 #hexdump($output);
 
-my $encoded = encode_base64($output);
-$encoded =~ s/\n//g;
+my $encoded = encode_base64url($output, "");
 $encoded =~ s/[=]+\z//;
 
 print "$encoded\n";
