@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use Encode qw(encode);
 use MIME::Base64 qw(encode_base64url);
 
 my $h = $ARGV[0];
@@ -69,7 +70,7 @@ foreach my $rd (@rdata) {
                          "$rd");     # RDATA
 }
 
-my $output = "$header$question$resource";
+my $output = encode("iso-8859-1", "$header$question$resource");
 
 #hexdump($output);
 
