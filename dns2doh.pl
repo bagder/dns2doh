@@ -74,5 +74,7 @@ my $output = "$header$question$resource";
 #hexdump($output);
 
 my $encoded = encode_base64($output);
+$encoded =~ s/\n//g;
+$encoded =~ s/[=]+\z//;
 
 print "$encoded\n";
