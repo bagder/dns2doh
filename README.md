@@ -1,7 +1,7 @@
 # dns2doh
 Resolve with DNS and generate DOH response
 
-# example
+## example
 
     $ ./dns2doh.pl daniel.haxx.se 
     AAAAAQAAAAQAAAAABmRhbmllbARoYXh4AnNlAAABAAHADAABAAEAAAA3AAAAAAAAAAAAAAAAl2XCMcAMAAEAAQAAADcAAAAAAAAAAAAAAACXZYIxwAwAAQABAAAANwAAAAAAAAAAAAAAAJdlQjHADAABAAEAAAA3AAAAAAAAAAAAAAAAl2UCMQ
@@ -18,3 +18,14 @@ Resolve with DNS and generate DOH response
     00000080  00 00 00 00 97 65 c2 31                           |.....e.1|
     00000088
 
+
+# FAQ
+
+## I can't base64 decode it!
+
+It uses the [base64url](https://tools.ietf.org/html/rfc4648#section-5) format,
+which is like normal base64 but with two letters changed.
+
+## Where the spec?
+
+https://tools.ietf.org/html/draft-ietf-doh-dns-over-https-01
