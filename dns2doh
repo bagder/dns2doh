@@ -98,12 +98,35 @@ sub hexdump {
     if($title) {
         print "= $title\n";
     }
+    my $s;
     for my $c (split(//, $raw)) {
-        printf "%s%02x: ", $i?"\n":"", $i if(!($i%16));
+        if(!($i%16)) {
+            my $txt="\n";
+            if($i) {
+                $txt="  |$s|\n";
+                $s="";
+            }
+            printf "%s%02x: ", $i?$txt:"", $i;
+        }
         printf ("%02x ", ord($c));
+        if((ord($c)>=32) && (ord($c)<127)) {
+            $s .= $c;
+        }
+        else {
+            $s .= '.';
+        }
         $i++;
     }
-    print "\n";
+    if($s) {
+        my $left;
+        if($i%16) {
+            $left = ' ' x ((16-$i%16)*3);
+        }
+        print "$left  |$s|\n";
+    }
+    else {
+        print "\n";
+    }
 }
 
 sub QNAME {
