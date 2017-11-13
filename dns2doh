@@ -1,15 +1,59 @@
 #!/usr/bin/perl
 
 use Encode qw(encode);
-use MIME::Base64 qw(encode_base64url);
+use MIME::Base64 qw(encode_base64url decode_base64url);
 
+my $h;
+while($ARGV[0]) {
 
-if($ARGV[0] eq "--hex") {
-    $showhex=1;
-    shift @ARGV;
+    if($ARGV[0] eq "--hex") {
+        $showhex=1;
+        shift @ARGV;
+    }
+    elsif($ARGV[0] eq "--decode") {
+        $decode=1;
+        shift @ARGV;
+    }
+    elsif($ARGV[0] eq "--encode") {
+        $encode=1;
+        shift @ARGV;
+    }
+    elsif(($ARGV[0] eq "--help") ||
+          ($ARGV[0] eq "-h")) {
+        print STDERR "Usage: dns2doh [options] <input>\n",
+            "Options:\n",
+            " --encode  encode host name input to DOH\n",
+            " --decode  decode DOH input to host name\n",
+            " --hex     show extra hexdup output\n";
+        exit;
+    }
+    else {
+        $h = $ARGV[0];
+        last;
+    }
 }
 
-my $h = $ARGV[0];
+if($decode) {
+    # decode base64url encoded DNS packet and extract host name
+    my $r = decode_base64url($h);
+    hexdump($r, "Incoming") if($showhex);
+    my @arr = split(//, $r);
+    my $i=12;
+    my $len = ord($arr[$i++]);
+    my $name;
+    while($len) {
+        while($len) {
+            $name .= $arr[$i++];
+            $len--;
+        }
+        $len = ord($arr[$i++]);
+        if($len) {
+            $name .= ".";
+        }
+    }
+    print "$name\n";
+    exit;
+}
 
 # IPv4 only is fine to start with
 my @dig=`dig +short $h`;
