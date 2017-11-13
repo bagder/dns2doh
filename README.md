@@ -1,6 +1,28 @@
 # dns2doh
 Resolve with DNS and generate DOH response
 
+## Usage
+
+Usage: dns2doh [options] input
+
+### --encode
+
+Encode the host name input to proper DOH message and output it. This is the
+default action if no option is given.
+
+### --decode
+
+Decode the DOH input and output the host name from the question part of the
+DNS packet.
+
+### --hex
+
+Show hexdump of the input.
+
+### --help
+
+Show usage message
+
 ## example
 
     $ ./dns2doh daniel.haxx.se
