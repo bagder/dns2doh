@@ -14,9 +14,13 @@ my $h = $ARGV[0];
 # IPv4 only is fine to start with
 my @dig=`dig +short $h`;
 
+if(!$dig[0]) {
+    # blank return: not found
+    exit;
+}
+
 # dig[0] starts with names, then follows IP addresses
 my $answers;
-
 my @rdata;
 foreach my $num (0 .. $#dig) {
     my $ipstr = $dig[$num];
