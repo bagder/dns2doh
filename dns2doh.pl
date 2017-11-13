@@ -8,13 +8,18 @@ my $h = $ARGV[0];
 # IPv4 only is fine to start with
 my @dig=`dig +short $h`;
 
-# dig[0] is the name, then follows IP addresses
+# dig[0] starts with names, then follows IP addresses
 my $answers = $#dig;
 
 my @rdata;
-foreach my $num (1 .. $#dig) {
+foreach my $num (0 .. $#dig) {
     my $ipstr = $dig[$num];
     chomp $ipstr;
+
+    if($ipstr =~ /[a-z]/i) {
+        # skip lines with letters!
+        next;
+    }
     
     my $address = pack 'C4', split(/\./, $ipstr);
     push @rdata, $address;
@@ -23,10 +28,17 @@ foreach my $num (1 .. $#dig) {
 my $seconds = 55; # TODO: get the real
 
 sub hexdump {
-    my ($raw) = @_;
-    my $len = length($raw);
-    foreach my $i (0 .. ($len-1)) {
-        printf ("%02x ", $raw[$i]);
+    my ($raw, $title) = @_;
+    my $i=0;
+
+    if($title) {
+        print "= $title\n";
+    }
+    for my $c (split(//, $raw)) {
+        printf "%02x: ", $i if(!($i%16));
+        printf ("%02x ", ord($c));
+        $i++;
+        print "\n" if(!($i%16));
     }
     print "\n";
 }
@@ -49,7 +61,7 @@ my $qname = QNAME($h);
 my $qnameptr =  sprintf("\xc0\x0c", $answers);
 my $ancount = sprintf("\x00%c", $answers);
 my $qtype = sprintf("\x00%c", 1); # for now
-my $ttl = pack 'N4', $seconds;
+my $ttl = pack 'N', $seconds;
 
 my $header = sprintf("\x00\x00". # ID
                      "\x00\x01". # |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
@@ -62,17 +74,23 @@ my $question = sprintf("$qname".   # QNAME
                        "\x00\x01");  # QCLASS
 
 foreach my $rd (@rdata) {
-
-    $resource .= sprintf("$qnameptr". # QNAME (pointer)
-                         "$qtype".   # QTYPE
-                         "\x00\x01". # QCLASS
-                         "$ttl".     # TTL
-                         "$rd");     # RDATA
+    my $len = length($rd);
+    my $rdlen = pack 'n', $len;
+    my $one .= sprintf("$qnameptr". # QNAME (pointer)
+                       "$qtype".    # QTYPE
+                       "\x00\x01".  # QCLASS
+                       "$ttl".      # TTL
+                       "$rdlen".    # RDLENGTH
+                       "$rd");      # RDATA
+    $resource .= $one;
 }
 
 my $output = encode("iso-8859-1", "$header$question$resource");
 
-#hexdump($output);
+#hexdump($output, "ALL");
+#hexdump($header, "Header");
+#hexdump($question, "Question");
+#hexdump($resource, "Resources");
 
 my $encoded = encode_base64url($output, "");
 $encoded =~ s/[=]+\z//;
