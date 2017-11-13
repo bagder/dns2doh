@@ -3,6 +3,16 @@
 use Encode qw(encode);
 use MIME::Base64 qw(encode_base64url decode_base64url);
 
+sub help {
+    print STDERR "Usage: dns2doh [options] <input>\n",
+        "Options:\n",
+        " --encode  encode host name input to DOH\n",
+        " --decode  decode DOH input to host name\n",
+        " --hex     show extra hexdup output\n";
+    exit;
+}
+
+
 my $h;
 while($ARGV[0]) {
 
@@ -20,17 +30,16 @@ while($ARGV[0]) {
     }
     elsif(($ARGV[0] eq "--help") ||
           ($ARGV[0] eq "-h")) {
-        print STDERR "Usage: dns2doh [options] <input>\n",
-            "Options:\n",
-            " --encode  encode host name input to DOH\n",
-            " --decode  decode DOH input to host name\n",
-            " --hex     show extra hexdup output\n";
-        exit;
+        help();
     }
     else {
         $h = $ARGV[0];
         last;
     }
+}
+
+if(!$h) {
+    help();
 }
 
 if($decode) {
