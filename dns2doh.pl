@@ -3,6 +3,12 @@
 use Encode qw(encode);
 use MIME::Base64 qw(encode_base64url);
 
+
+if($ARGV[0] eq "--hex") {
+    $showhex=1;
+    shift @ARGV;
+}
+
 my $h = $ARGV[0];
 
 # IPv4 only is fine to start with
@@ -35,10 +41,9 @@ sub hexdump {
         print "= $title\n";
     }
     for my $c (split(//, $raw)) {
-        printf "%02x: ", $i if(!($i%16));
+        printf "%s%02x: ", $i?"\n":"", $i if(!($i%16));
         printf ("%02x ", ord($c));
         $i++;
-        print "\n" if(!($i%16));
     }
     print "\n";
 }
@@ -87,12 +92,15 @@ foreach my $rd (@rdata) {
 
 my $output = encode("iso-8859-1", "$header$question$resource");
 
-#hexdump($output, "ALL");
-#hexdump($header, "Header");
-#hexdump($question, "Question");
-#hexdump($resource, "Resources");
+if($showhex) {
+    hexdump($output, "ALL");
+    hexdump($header, "Header");
+    hexdump($question, "Question");
+    hexdump($resource, "Resources");
+}
+else {
+    my $encoded = encode_base64url($output, "");
+    $encoded =~ s/[=]+\z//;
 
-my $encoded = encode_base64url($output, "");
-$encoded =~ s/[=]+\z//;
-
-print "$encoded\n";
+    print "$encoded\n";
+}
