@@ -15,7 +15,7 @@ my $h = $ARGV[0];
 my @dig=`dig +short $h`;
 
 # dig[0] starts with names, then follows IP addresses
-my $answers = $#dig;
+my $answers;
 
 my @rdata;
 foreach my $num (0 .. $#dig) {
@@ -29,6 +29,7 @@ foreach my $num (0 .. $#dig) {
     
     my $address = pack 'C4', split(/\./, $ipstr);
     push @rdata, $address;
+    $answers++;
 }
 
 my $seconds = 55; # TODO: get the real
