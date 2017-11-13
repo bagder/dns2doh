@@ -3,10 +3,10 @@ Resolve with DNS and generate DOH response
 
 ## example
 
-    $ ./dns2doh.pl daniel.haxx.se
+    $ ./dns2doh daniel.haxx.se
     AAAAAQAAAAQAAAAABmRhbmllbARoYXh4AnNlAAABAAHADAABAAEAAAA3AASXZQIxwAwAAQABAAAANwAEl2VCMcAMAAEAAQAAADcABJdlgjHADAABAAEAAAA3AASXZcIx
 
-    $ ./dns2doh.pl daniel.haxx.se | ./base64url-decode.pl | hd
+    $ ./dns2doh daniel.haxx.se | ./base64url-decode | hd
     00000000  00 00 00 01 00 00 00 04  00 00 00 00 06 64 61 6e  |.............dan|
     00000010  69 65 6c 04 68 61 78 78  02 73 65 00 00 01 00 01  |iel.haxx.se.....|
     00000020  c0 0c 00 01 00 01 00 00  00 37 00 04 97 65 02 31  |.........7...e.1|
@@ -15,7 +15,7 @@ Resolve with DNS and generate DOH response
     00000050  c0 0c 00 01 00 01 00 00  00 37 00 04 97 65 c2 31  |.........7...e.1|
     00000060
 
-    $ ./dns2doh.pl --hex daniel.haxx.se
+    $ ./dns2doh --hex daniel.haxx.se
     = ALL
     00: 00 00 00 01 00 00 00 04 00 00 00 00 06 64 61 6e 
     10: 69 65 6c 04 68 61 78 78 02 73 65 00 00 01 00 01 
