@@ -1,4 +1,4 @@
 # DOH
 
-- The [dns2doh too](dns2doh.md).
+- The [dns2doh tool](dns2doh.md).
 - The [server endpoint](server.md).
