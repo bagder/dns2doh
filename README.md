@@ -5,6 +5,14 @@ Resolve with DNS and generate DOH response
 
 Usage: dns2doh [options] [input]
 
+### --A
+
+Ask for a type A resource.
+
+### --AAAA
+
+Ask for a type AAAA resource.
+
 ### --decode
 
 Decode the DOH input and output the type field and host name from the question
@@ -20,6 +28,10 @@ to control which TYPE to use.
 ### --hex
 
 Show hexdump of the input/output. For debugging the process.
+
+### --onlyq
+
+When encoding a host name, only put the question part in the package. Skip the answer.
 
 ### --help
 
