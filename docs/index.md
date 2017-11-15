@@ -24,6 +24,8 @@ according to spec. The HTTP answer to a query for the AAAA resources for
 
     AAAAAQAAAAEAAAAABmRhbmllbARoYXh4AnNlAAABAAHADAABAAEAAAA3AASXZVYx
 
+A failure to lookup the requested entry will result in a 404 response.
+
 ## Limitations
 
 - The server doesn't yet send back the *real* TTL values in the
