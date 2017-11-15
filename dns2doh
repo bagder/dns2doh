@@ -11,13 +11,15 @@ sub help {
         " --AAAA    encode a type AAAA request\n",
         " --decode  decode DOH input to type + host name\n",
         " --encode  encode host name input to DOH\n",
-        " --hex     show extra hex output\n";
+        " --hex     show extra hex output\n",
+        " --onlyq   encode only the question\n";
     exit;
 }
 
 
 my $h;
 my $type = 1; # default type is A
+my $onlyq = 0; # set to 1 if only asking, not getting the answer
 while($ARGV[0]) {
 
     if($ARGV[0] eq "--hex") {
@@ -30,6 +32,10 @@ while($ARGV[0]) {
     }
     elsif($ARGV[0] eq "--encode") {
         $encode=1;
+        shift @ARGV;
+    }
+    elsif($ARGV[0] eq "--onlyq") {
+        $onlyq=1;
         shift @ARGV;
     }
     elsif($ARGV[0] eq "--A") {
@@ -81,33 +87,35 @@ if($decode) {
     exit;
 }
 
-my $digtype = ($type == 28)?"AAAA":"A";
-my @dig=`dig +short -t $digtype $h`;
-
-if(!$dig[0]) {
-    # blank return: not found
-    exit;
-}
-
-# dig[0] starts with names, then follows IP addresses
 my $answers;
 my @rdata;
-foreach my $ipstr (@dig) {
-    chomp $ipstr;
-    my $address;
+if(!$onlyq) {
+    my $digtype = ($type == 28)?"AAAA":"A";
+    my @dig=`dig +short -t $digtype $h`;
 
-    $address = inet_pton( ($type == 28)?AF_INET6:AF_INET, $ipstr);
-    if(!$address) {
-        # not a valid address
-        next;
+    if(!$dig[0]) {
+        # blank return: not found
+        exit;
     }
-    push @rdata, $address;
-    $answers++;
-}
 
-if(!$answers) {
-    # no addresses
-    exit;
+    # dig[0] starts with names, then follows IP addresses
+    foreach my $ipstr (@dig) {
+        chomp $ipstr;
+        my $address;
+
+        $address = inet_pton( ($type == 28)?AF_INET6:AF_INET, $ipstr);
+        if(!$address) {
+            # not a valid address
+            next;
+        }
+        push @rdata, $address;
+        $answers++;
+    }
+    
+    if(!$answers) {
+        # no addresses
+        exit;
+    }
 }
 
 my $seconds = 55; # TODO: get the real
@@ -192,13 +200,18 @@ foreach my $rd (@rdata) {
     $resource .= $one;
 }
 
-my $output = encode("iso-8859-1", "$header$question$resource");
+my $msg = "$header$question$resource";
+if($onlyq) {
+    $msg = "$header$question";
+}
+
+my $output = encode("iso-8859-1", "$msg");
 
 if($showhex) {
     hexdump($output, "ALL");
     hexdump($header, "Header");
     hexdump($question, "Question");
-    hexdump($resource, "Resources");
+    hexdump($resource, "Resources") unless($onlyq);
 }
 else {
     my $encoded = encode_base64url($output, "");
