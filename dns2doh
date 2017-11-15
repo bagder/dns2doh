@@ -2,6 +2,7 @@
 
 use Encode qw(encode);
 use MIME::Base64 qw(encode_base64url decode_base64url);
+use Socket qw(inet_pton AF_INET6 AF_INET);
 
 sub help {
     print STDERR "Usage: dns2doh [options] [input]\n",
@@ -80,8 +81,8 @@ if($decode) {
     exit;
 }
 
-# IPv4 only is fine to start with
-my @dig=`dig +short $h`;
+my $digtype = ($type == 28)?"AAAA":"A";
+my @dig=`dig +short -t $digtype $h`;
 
 if(!$dig[0]) {
     # blank return: not found
@@ -91,18 +92,22 @@ if(!$dig[0]) {
 # dig[0] starts with names, then follows IP addresses
 my $answers;
 my @rdata;
-foreach my $num (0 .. $#dig) {
-    my $ipstr = $dig[$num];
+foreach my $ipstr (@dig) {
     chomp $ipstr;
+    my $address;
 
-    if($ipstr =~ /[a-z]/i) {
-        # skip lines with letters!
+    $address = inet_pton( ($type == 28)?AF_INET6:AF_INET, $ipstr);
+    if(!$address) {
+        # not a valid address
         next;
     }
-    
-    my $address = pack 'C4', split(/\./, $ipstr);
     push @rdata, $address;
     $answers++;
+}
+
+if(!$answers) {
+    # no addresses
+    exit;
 }
 
 my $seconds = 55; # TODO: get the real
