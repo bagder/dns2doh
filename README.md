@@ -3,21 +3,23 @@ Resolve with DNS and generate DOH response
 
 ## Usage
 
-Usage: dns2doh [options] input
-
-### --encode
-
-Encode the host name input to proper DOH message and output it. This is the
-default action if no option is given.
+Usage: dns2doh [options] [input]
 
 ### --decode
 
-Decode the DOH input and output the host name from the question part of the
-DNS packet.
+Decode the DOH input and output the type field and host name from the question
+part of the DNS packet. The type is output as `A` or `AAAA` depending on the
+field being 1 or 28.
+
+### --encode
+
+(default) Encode the host name input to proper DOH message and output it. This
+is the default action if no option is given. Use `--A` (default) or `--AAAA`
+to control which TYPE to use.
 
 ### --hex
 
-Show hexdump of the input.
+Show hexdump of the input/output. For debugging the process.
 
 ### --help
 
