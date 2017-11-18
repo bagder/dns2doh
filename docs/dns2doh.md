@@ -34,6 +34,10 @@ Show hexdump of the input/output. For debugging the process.
 
 When encoding a host name, only put the question part in the package. Skip the answer.
 
+### --raw
+
+Pass the output without doing base64url encoding.
+
 ### --help
 
 Show usage message

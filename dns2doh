@@ -12,7 +12,8 @@ sub help {
         " --decode  decode DOH input to type + host name\n",
         " --encode  encode host name input to DOH\n",
         " --hex     show extra hex output\n",
-        " --onlyq   encode only the question\n";
+        " --onlyq   encode only the question\n",
+        " --raw     output without encoding\n";
     exit;
 }
 
@@ -20,6 +21,7 @@ sub help {
 my $h;
 my $type = 1; # default type is A
 my $onlyq = 0; # set to 1 if only asking, not getting the answer
+my $encode = 1; # default is base64 encode
 while($ARGV[0]) {
 
     if($ARGV[0] eq "--hex") {
@@ -36,6 +38,11 @@ while($ARGV[0]) {
     }
     elsif($ARGV[0] eq "--onlyq") {
         $onlyq=1;
+        shift @ARGV;
+    }
+    elsif($ARGV[0] eq "--raw") {
+        # do not base64 encode output, pass it out "raw"
+        $encode=0;
         shift @ARGV;
     }
     elsif($ARGV[0] eq "--A") {
@@ -213,9 +220,12 @@ if($showhex) {
     hexdump($question, "Question");
     hexdump($resource, "Resources") unless($onlyq);
 }
-else {
+elsif($encode) {
     my $encoded = encode_base64url($output, "");
     $encoded =~ s/[=]+\z//;
 
     print "$encoded\n";
+}
+else {
+    print "$output\n";
 }
