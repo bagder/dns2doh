@@ -28,6 +28,8 @@ A failure to lookup the requested entry will result in a 404 response.
 
 ## Limitations
 
+- It requires the query as a GET
+
 - The server doesn't yet send back the *real* TTL values in the
 responses. Only a made up number
 
