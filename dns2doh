@@ -227,5 +227,6 @@ elsif($encode) {
     print "$encoded\n";
 }
 else {
-    print "$output\n";
+    # raw
+    print "$output";
 }
