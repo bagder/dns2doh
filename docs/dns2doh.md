@@ -30,6 +30,22 @@ to control which TYPE to use.
 
 Show hexdump of the input/output. For debugging the process.
 
+### --hosts=FILE
+
+Gives dns2doh a list of host names with type and addresses for which dns2doh
+will not use dig to resolve but instead use this set of custom handicrafted
+addresses. Add multiple addresses for a host name by adding multiple lines for
+it.
+
+Each line in the hosts file should use the format
+
+    host type address
+
+It could look like
+
+    www.example.com A 127.0.0.1
+    www.example.com AAAA 2606:2800:220:1:248:1893:25c8:1946
+
 ### --onlyq
 
 When encoding a host name, only put the question part in the package. Skip the answer.

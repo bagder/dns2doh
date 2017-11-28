@@ -12,6 +12,7 @@ sub help {
         " --decode  decode DOH input to type + host name\n",
         " --encode  encode host name input to DOH\n",
         " --hex     show extra hex output\n",
+        " --hosts=[file] data for custom responses\n",
         " --onlyq   encode only the question\n",
         " --raw     output without encoding\n";
     exit;
@@ -57,6 +58,10 @@ while($ARGV[0]) {
           ($ARGV[0] eq "-h")) {
         help();
     }
+    elsif($ARGV[0] =~ /--hosts=(.*)/) {
+        $hosts = $1;
+        shift @ARGV;
+    }
     else {
         $h = $ARGV[0];
         last;
@@ -67,6 +72,26 @@ if(!$h) {
     while(<STDIN>) {
         $h .= $_;
     }
+}
+
+if($hosts) {
+    # host type address
+    # www.example.com A 127.0.0.1
+    # www.example.com AAAA 2606:2800:220:1:248:1893:25c8:1946
+
+    open(H, "<$hosts");
+    while (<H> ) {
+        chomp;
+        if($_ =~ /^ *\#/) {
+            # comment
+            next;
+        }
+        elsif($_ =~ /([^ ]*) *([^ ]*) *([^ ]*)/) {
+            my ($name, $type, $addr) = ($1, $2, $3);
+            $faketype{$name}{$type} .= "$addr ";
+        }
+    }
+    close(H);
 }
 
 if($decode) {
@@ -98,7 +123,16 @@ my $answers;
 my @rdata;
 if(!$onlyq) {
     my $digtype = ($type == 28)?"AAAA":"A";
-    my @dig=`dig +short -t $digtype $h`;
+
+    my @dig;
+    if($faketype{$h}{$digtype}) {
+        foreach my $a (split(/ /, $faketype{$h}{$digtype})) {
+            push @dig, "$a\n";
+        }
+    }
+    else {
+        @dig=`dig +short -t $digtype $h`;
+    }
 
     if(!$dig[0]) {
         # blank return: not found
