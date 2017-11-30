@@ -13,6 +13,7 @@ sub help {
         " --encode  encode host name input to DOH\n",
         " --hex     show extra hex output\n",
         " --hosts=[file] data for custom responses\n",
+        " --NS      encode a type NS request\n",
         " --onlyq   encode only the question\n",
         " --raw     output without encoding\n";
     exit;
@@ -48,6 +49,14 @@ while($ARGV[0]) {
     }
     elsif($ARGV[0] eq "--A") {
         $type=1;
+        shift @ARGV;
+    }
+    elsif($ARGV[0] eq "--AAAA") {
+        $type=28;
+        shift @ARGV;
+    }
+    elsif($ARGV[0] eq "--NS") {
+        $type=2;
         shift @ARGV;
     }
     elsif($ARGV[0] eq "--AAAA") {
@@ -121,7 +130,7 @@ if($decode) {
 
 my $answers;
 my @rdata;
-if(!$onlyq) {
+if(!$onlyq && ($type != 2)) {
     my $digtype = ($type == 28)?"AAAA":"A";
 
     my @dig;
@@ -156,6 +165,27 @@ if(!$onlyq) {
     if(!$answers) {
         # no addresses
         exit;
+    }
+}
+elsif(!$onlyq && ($type == 2)) {
+    my @ns;
+    my $digtype = "NS";
+    # NS record lookup
+    if($faketype{$h}{$digtype}) {
+        foreach my $a (split(/ /, $faketype{$h}{$digtype})) {
+            push @ns, "$a\n";
+        }
+    }
+    else {
+        @ns=`dig +short -t $digtype $h`;
+    }
+
+    if(!$ns[0]) {
+        # blank return: no NS found
+        exit;
+    }
+    foreach my $n (@ns) {
+        push @rdata, QNAME($n);
     }
 }
 

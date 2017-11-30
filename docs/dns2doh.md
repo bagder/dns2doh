@@ -8,7 +8,7 @@ Usage: dns2doh [options] [input]
 
 ### --A
 
-Ask for a type A resource.
+Ask for a type A resource. (default)
 
 ### --AAAA
 
@@ -45,6 +45,10 @@ It could look like
 
     www.example.com A 127.0.0.1
     www.example.com AAAA 2606:2800:220:1:248:1893:25c8:1946
+
+### --NS
+
+Ask for a type NS resource.
 
 ### --onlyq
 
