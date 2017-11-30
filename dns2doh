@@ -19,6 +19,9 @@ sub help {
     exit;
 }
 
+my %dnstype = (1 => "A",
+               2 => "NS",
+               28 => "AAAA");
 
 my $h;
 my $type = 1; # default type is A
@@ -57,10 +60,6 @@ while($ARGV[0]) {
     }
     elsif($ARGV[0] eq "--NS") {
         $type=2;
-        shift @ARGV;
-    }
-    elsif($ARGV[0] eq "--AAAA") {
-        $type=28;
         shift @ARGV;
     }
     elsif(($ARGV[0] eq "--help") ||
@@ -124,14 +123,14 @@ if($decode) {
     # TYPE is 16 bits following the name
     my $DTYPE = ord($arr[$i++]) << 8;
     $DTYPE += ord($arr[$i++]);
-    printf "%s $name\n", $DTYPE == 28?"AAAA":"A";
+    printf "%s $name\n", $dnstype{$DTYPE};
     exit;
 }
 
 my $answers;
 my @rdata;
 if(!$onlyq && ($type != 2)) {
-    my $digtype = ($type == 28)?"AAAA":"A";
+    my $digtype = $dnstype{$type};
 
     my @dig;
     if($faketype{$h}{$digtype}) {
@@ -186,6 +185,7 @@ elsif(!$onlyq && ($type == 2)) {
     }
     foreach my $n (@ns) {
         push @rdata, QNAME($n);
+        $answers++;
     }
 }
 
