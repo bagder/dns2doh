@@ -258,8 +258,8 @@ my $answer_header = sprintf("\x00\x00". # ID
                             "\x00\x00"); # ARCOUNT
 my $query_header = sprintf("\x00\x00". # ID
                            "\x00\x00". # |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
-                           "\x00\x00". # QDCOUNT
-                           $ancount. # ANCOUNT
+                           "\x00\x01". # QDCOUNT
+                           "\x00\x00". # ANCOUNT
                            "\x00\x00". # NSCOUNT
                            "\x00\x00"); # ARCOUNT
 my $question = sprintf("$qname".   # QNAME
