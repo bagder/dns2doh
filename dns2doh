@@ -249,12 +249,19 @@ my $ancount = sprintf("\x00%c", $answers);
 my $qtype = sprintf("\x00%c", $type); # for now
 my $ttl = pack 'N', $seconds;
 
-my $header = sprintf("\x00\x00". # ID
-                     "\x00\x01". # |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
-                     "\x00\x00". # QDCOUNT
-                     $ancount. # ANCOUNT
-                     "\x00\x00". # NSCOUNT
-                     "\x00\x00"); # ARCOUNT
+my $header;
+my $answer_header = sprintf("\x00\x00". # ID
+                            "\x01\x00". # |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
+                            "\x00\x00". # QDCOUNT
+                            $ancount. # ANCOUNT
+                            "\x00\x00". # NSCOUNT
+                            "\x00\x00"); # ARCOUNT
+my $query_header = sprintf("\x00\x00". # ID
+                           "\x00\x00". # |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
+                           "\x00\x00". # QDCOUNT
+                           $ancount. # ANCOUNT
+                           "\x00\x00". # NSCOUNT
+                           "\x00\x00"); # ARCOUNT
 my $question = sprintf("$qname".   # QNAME
                        "$qtype". # QTYPE
                        "\x00\x01");  # QCLASS
@@ -271,9 +278,14 @@ foreach my $rd (@rdata) {
     $resource .= $one;
 }
 
-my $msg = "$header$question$resource";
+my $msg;
 if($onlyq) {
+    $header = $query_header;
     $msg = "$header$question";
+}
+else {
+    $header = $answer_header;
+    $msg = "$header$question$resource";
 }
 
 my $output = encode("iso-8859-1", "$msg");
