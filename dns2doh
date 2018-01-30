@@ -246,19 +246,20 @@ sub QNAME {
 my $qname = QNAME($h);
 my $qnameptr =  sprintf("\xc0\x0c", $answers);
 my $ancount = sprintf("\x00%c", $answers);
+my $qdcount = sprintf("\x00%c", 1); # questions
 my $qtype = sprintf("\x00%c", $type); # for now
 my $ttl = pack 'N', $seconds;
 
 my $header;
 my $answer_header = sprintf("\x00\x00". # ID
                             "\x01\x00". # |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
-                            "\x00\x00". # QDCOUNT
+                            $qdcount. # QDCOUNT
                             $ancount. # ANCOUNT
                             "\x00\x00". # NSCOUNT
                             "\x00\x00"); # ARCOUNT
 my $query_header = sprintf("\x00\x00". # ID
                            "\x00\x00". # |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
-                           "\x00\x01". # QDCOUNT
+                           $qdcount.   # QDCOUNT
                            "\x00\x00". # ANCOUNT
                            "\x00\x00". # NSCOUNT
                            "\x00\x00"); # ARCOUNT
