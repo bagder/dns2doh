@@ -14,6 +14,6 @@ which is like normal base64 but with two letters changed.
 
 ## Where's the spec?
 
-DOH: https://tools.ietf.org/html/draft-ietf-doh-dns-over-https-02
+DOH: https://tools.ietf.org/html/draft-ietf-doh-dns-over-https-03
 
 DNS - RFC 1035: https://www.ietf.org/rfc/rfc1035.txt

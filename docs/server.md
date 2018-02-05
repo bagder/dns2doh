@@ -2,15 +2,15 @@
 
 I run a **toy server** end point at https://daniel.haxx.se. It is HTTPS only
 and supports HTTP/2. Issue real-looking DOH requests to this URI:
-`https://daniel.haxx.se/dns/?body=[base64url]`.
+`https://daniel.haxx.se/dns/?dns=[base64url]`.
 
 For example, ask for the AAAA resources for the host `daniel.haxx.se`:
 
-   `https://daniel.haxx.se/dns/?body=AAAAAQAAAAAAAAAABmRhbmllbARoYXh4AnNlAAAcAAE`
+   `https://daniel.haxx.se/dns/?dns=AAAAAQAAAAAAAAAABmRhbmllbARoYXh4AnNlAAAcAAE`
 
 Or the A resources for the host `www.mozilla.org`:
 
-   `https://daniel.haxx.se/dns/?body=AAAAAQAAAAAAAAAAA3d3dwdtb3ppbGxhA29yZwAAAQAB`
+   `https://daniel.haxx.se/dns/?dns=AAAAAQAAAAAAAAAAA3d3dwdtb3ppbGxhA29yZwAAAQAB`
 
 ## Response
 
