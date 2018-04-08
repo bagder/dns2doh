@@ -37,7 +37,7 @@ Show usage message
     00000090  65 c2 31                                          |e.1|
     00000093
 
-    $ ./doh --AAAA example.com  | hd
+    $ ./doh --AAAA example.com https://dns.cloudflare.com/.well-known/dns-query | hd
     00000000  00 00 81 80 00 01 00 01  00 00 00 00 07 65 78 61  |.............exa|
     00000010  6d 70 6c 65 03 63 6f 6d  00 00 1c 00 01 c0 0c 00  |mple.com........|
     00000020  1c 00 01 00 00 00 c4 00  10 26 06 28 00 02 20 00  |.........&.(.. .|
