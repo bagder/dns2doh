@@ -125,7 +125,7 @@ my $ttl = pack 'N', $seconds;
 my $header;
 
 my $query_header = sprintf("\x00\x00". # ID
-                           "\x00\x00". # |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
+                           "\x01\x00". # |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
                            $qdcount.   # QDCOUNT
                            "\x00\x00". # ANCOUNT
                            "\x00\x00". # NSCOUNT
@@ -140,8 +140,6 @@ $header = $query_header;
 $msg = "$header$question";
 
 my $output = encode("iso-8859-1", "$msg");
-
-#print STDERR "curl --data-binary \@- -H 'Content-Type: application/dns-udpwireformat' $url -o-\n";
 
 open(CURL, "|curl -s --data-binary \@- -H 'Content-Type: application/dns-udpwireformat' $url -o-");
 print CURL $output;
