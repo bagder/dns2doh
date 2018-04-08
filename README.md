@@ -1,7 +1,8 @@
 # dns2doh
 
-Resolve with DNS and generate DOH response with the command line tool. Play
-with the toy server.
+dns2doh - resolves with DNS and generates a DOH response.
+
+doh - resolves a host name over DOH.
 
 Docs: https://bagder.github.io/dns2doh/
 
@@ -14,6 +15,6 @@ which is like normal base64 but with two letters changed.
 
 ## Where's the spec?
 
-DOH: https://tools.ietf.org/html/draft-ietf-doh-dns-over-https-03
+DOH: https://tools.ietf.org/html/draft-ietf-doh-dns-over-https
 
 DNS - RFC 1035: https://www.ietf.org/rfc/rfc1035.txt
