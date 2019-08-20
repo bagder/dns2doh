@@ -17,4 +17,4 @@ which is like normal base64 but with two letters changed.
 
 DoH: [RFC 8484](https://tools.ietf.org/html/rfc8484)
 
-DNS -[RFC 1035](https://www.ietf.org/rfc/rfc1035.txt)
+DNS: [RFC 1035](https://www.ietf.org/rfc/rfc1035.txt)
