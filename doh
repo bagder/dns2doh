@@ -140,7 +140,7 @@ my $qname = QNAME($host);
 my $qnameptr =  sprintf("\xc0\x0c", $answers);
 my $ancount = sprintf("\x00%c", $answers);
 my $qdcount = sprintf("\x00%c", 1); # questions
-my $qtype = sprintf("\x00%c", $type); # for now
+my $qtype = sprintf("%c%c", $type >> 8, $type & 255);
 my $ttl = pack 'N', $seconds;
 
 my $header;
@@ -162,7 +162,8 @@ $msg = "$header$question";
 
 my $output = encode("iso-8859-1", "$msg");
 
-open(CURL, "|curl -s --data-binary \@- -H 'Content-Type: application/dns-udpwireformat' $url -o-");
+open(CURL, "|curl -s --data-binary \@- -H 'Content-Type: application/dns-message' $url -o-");
+
 print CURL $output;
 close(CURL);
 
