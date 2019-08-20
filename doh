@@ -10,13 +10,23 @@ sub help {
         " --A       encode a type A request (default)\n",
         " --AAAA    encode a type AAAA request\n",
         " --CNAME   encode a type CNAME request\n",
-        " --NS      encode a type NS request\n";
+        " --NS      encode a type NS request\n",
+        " --TXT     encode a type TXT request\n",
+        " --TYPEnum (or --type=num)\n",
+	"           encode a type <num> request (num in [1..65535])\n",
+	"\n",
+	"Notes:\n",
+	" 1. ESNI data may appear as TXT records using prefix '_esni.'\n",
+	"    or as TYPE65439 records using the host name without prefix.\n",
+	" 2. Not all DOH servers accept queries which specify TYPE65439.\n",
+	"\n";
     exit;
 }
 
 my %dnstype = (1 => "A",
                2 => "NS",
                5 => "CNAME",
+	       16 => "TXT",
                28 => "AAAA");
 
 my $host;
@@ -41,6 +51,17 @@ while($ARGV[0]) {
     elsif($ARGV[0] eq "--CNAME") {
         $type=5;
         shift @ARGV;
+    }
+    elsif($ARGV[0] eq "--TXT") {
+	$type=16;
+	shift @ARGV;
+    }
+    elsif((($ARGV[0] =~ /^--TYPE([0-9]+)$/) ||
+	   ($ARGV[0] =~ /^--type=([0-9]+)$/)) &&
+	  (int($1) > 0) &&
+	  (int($1) < 2**16)) {
+	$type=int($1);
+	shift @ARGV;
     }
     elsif(($ARGV[0] eq "--help") ||
           ($ARGV[0] eq "-h")) {
