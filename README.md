@@ -1,8 +1,8 @@
 # dns2doh
 
-dns2doh - resolves with DNS and generates a DOH response.
+dns2doh - resolves with DNS and generates a DoH response.
 
-doh - resolves a host name over DOH.
+doh - resolves a host name over DoH.
 
 Docs: https://bagder.github.io/dns2doh/
 
@@ -15,6 +15,6 @@ which is like normal base64 but with two letters changed.
 
 ## Where's the spec?
 
-DOH: https://tools.ietf.org/html/draft-ietf-doh-dns-over-https
+DoH: [RFC 8484](https://tools.ietf.org/html/rfc8484)
 
-DNS - RFC 1035: https://www.ietf.org/rfc/rfc1035.txt
+DNS -[RFC 1035](https://www.ietf.org/rfc/rfc1035.txt)
